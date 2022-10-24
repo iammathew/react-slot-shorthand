@@ -12,6 +12,7 @@ export type SlotsType = Record<
   {
     component: React.ComponentType<any>;
     shorthand: PrimitiveShorthand;
+    optional: true | false;
   }
 >;
 
@@ -27,13 +28,38 @@ function isRenderProps<C extends React.ComponentType<any>>(
 
 export type PropsWithSlots<Props, Slots extends SlotsType> = Props &
   {
-    [Property in keyof Slots]:
-      | RenderPropsSlot<Slots[Property]['component']>
-      | (React.ComponentProps<Slots[Property]['component']> &
-          Partial<RenderPropsSlot<Slots[Property]['component']>>)
-      | Slots[Property]['shorthand']
-      | null;
+    [Property in keyof Slots]: Slots[Property]['optional'] extends true
+      ?
+          | RenderPropsSlot<Slots[Property]['component']>
+          | (React.ComponentProps<Slots[Property]['component']> &
+              Partial<RenderPropsSlot<Slots[Property]['component']>>)
+          | Slots[Property]['shorthand']
+          | null
+          | undefined
+      :
+          | RenderPropsSlot<Slots[Property]['component']>
+          | (React.ComponentProps<Slots[Property]['component']> &
+              Partial<RenderPropsSlot<Slots[Property]['component']>>)
+          | Slots[Property]['shorthand']
+          | null;
   };
+
+function Text() {
+  return <p></p>;
+}
+
+export type Test = PropsWithSlots<
+  {},
+  {
+    text?: {
+      component: typeof Text;
+      shorthand: React.ReactElement;
+      optional: true;
+    };
+  }
+>;
+
+const test: Test = {};
 
 export function useSlot<Component extends React.ComponentType<any>>(
   component: Component,
@@ -41,7 +67,8 @@ export function useSlot<Component extends React.ComponentType<any>>(
     | RenderPropsSlot<Component>
     | (React.ComponentProps<Component> & Partial<RenderPropsSlot<Component>>)
     | PrimitiveShorthand
-    | null,
+    | null
+    | undefined,
   options: {
     primitiveRemap:
       | keyof React.ComponentProps<Component>
@@ -85,6 +112,8 @@ export function useSlot<Component extends React.ComponentType<any>>(
         restProps as React.ComponentProps<Component>
       );
     };
+  } else if (props === undefined) {
+    appliedProps = options.defaultProps;
   } else {
     appliedProps = props;
   }

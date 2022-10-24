@@ -10,7 +10,13 @@ function TextContainer({
   text,
 }: PropsWithSlots<
   {},
-  { text: { component: typeof Text; shorthand: string | React.ReactElement } }
+  {
+    text: {
+      component: typeof Text;
+      shorthand: string | React.ReactElement;
+      optional: false;
+    };
+  }
 >) {
   const renderText = useSlot(Text, text, {
     primitiveRemap: 'body',

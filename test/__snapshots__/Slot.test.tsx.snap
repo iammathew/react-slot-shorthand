@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Slot TextContainer[body] renders correctly (null) 1`] = `<div />`;
+
+exports[`Slot TextContainer[body] renders correctly (props) 1`] = `
+<div>
+  <p>
+    Props used!
+  </p>
+</div>
+`;
+
+exports[`Slot TextContainer[body] renders correctly (react element shorthand) 1`] = `
+<div>
+  <p>
+    <i>
+      Element Shorthand!
+    </i>
+  </p>
+</div>
+`;
+
+exports[`Slot TextContainer[body] renders corretly (string shorthand) 1`] = `
+<div>
+  <p>
+    String Shorthand!
+  </p>
+</div>
+`;
